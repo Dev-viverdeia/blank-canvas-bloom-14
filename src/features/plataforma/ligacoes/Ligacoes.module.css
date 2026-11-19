@@ -1,0 +1,1623 @@
+/* A área Ligações (2.3): o topo (a situação e três números, ou o cartão de
+   ativar), as abas e cada aba. Tokens --sb-* de src/styles/subido.css. Classes com o prefixo "lg". Os
+   cartões de dentro (ativar, desativar) usam as classes da Configuração (prefixo "cf").
+   O movimento: curto (150 a 300 ms, o da contagem e do indicador um pouco mais), com as curvas do
+   Subido (--via-ease-out, a mola só no selo). As entradas usam `backwards`, nunca `both` (o
+   transform final prenderia os filhos com position: fixed). Com prefers-reduced-motion, ou com a
+   raiz marcada data-movimento="reduzido", as animações e os deslizes saem (o fim deste arquivo). */
+
+.lgTela {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-6);
+  min-width: 0;
+  /* backwards, e não both: a animação que continua valendo prenderia os filhos com position: fixed */
+  animation: lg-vista 0.45s var(--via-ease-out) backwards;
+}
+
+.lgTela[data-sem-entrada] {
+  animation: none;
+}
+
+@keyframes lg-vista {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.lgCab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-2);
+  max-width: 46rem;
+}
+
+.lgTitulo {
+  margin: 0;
+  font-size: var(--sb-fs-pagina);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+  outline: none;
+}
+
+.lgDesc {
+  margin: 0;
+  color: var(--sb-tinta-2);
+  font-size: 0.9375rem;
+  text-wrap: pretty;
+}
+
+.lgSr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- o topo ---------- */
+
+.lgTopo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sb-esp-4);
+  padding: var(--sb-pad-card);
+  border-radius: var(--sb-r-card);
+  background: var(--sb-branco);
+  box-shadow: var(--sb-sombra-card);
+}
+
+.lgSituacao {
+  display: flex;
+  align-items: center;
+  gap: var(--sb-esp-3);
+  min-width: 0;
+}
+
+.lgSituacaoIcone {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--sb-azul-claro);
+  color: var(--sb-azul-texto);
+}
+
+/* com uma ligação acontecendo, o telefone do topo emite uma onda */
+.lgSituacaoIcone[data-vivo] {
+  animation: lg-onda 1.8s var(--via-ease-out) infinite;
+}
+
+.lgSituacaoIcone[data-tom="desligadas"] {
+  background: var(--sb-canvas);
+  color: var(--sb-tinta-3);
+}
+
+.lgSituacaoTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lgSituacaoH {
+  margin: 0;
+  font-size: var(--sb-fs-cartao);
+  font-weight: 600;
+  line-height: 1.3;
+  outline: none;
+  overflow-wrap: anywhere;
+}
+
+.lgMeta {
+  margin: 0;
+  color: var(--sb-tinta-3);
+  font-size: var(--sb-fs-meta);
+  line-height: 1.4;
+}
+
+.lgNumeros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sb-esp-2);
+  margin: 0;
+  padding: 0;
+}
+
+.lgNumero {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+  min-width: 112px;
+  padding: 10px 14px;
+  border-radius: var(--sb-r-item);
+  background: var(--sb-canvas);
+  transition: background-color var(--app-t-reveal);
+}
+
+.lgNumero dt {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  line-height: 1.3;
+}
+
+.lgNumero dd {
+  margin: 0;
+  font-family: var(--sb-fonte-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.lgNumero[data-vivo] {
+  background: var(--sb-azul-claro);
+}
+
+.lgNumero[data-vivo] dd {
+  color: var(--sb-azul-texto);
+}
+
+/* o ponto que pulsa no "Em andamento" acima de zero (o texto diz o mesmo: nunca só a cor) */
+.lgNumero[data-vivo] dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lgNumero[data-vivo] dt::before {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sb-azul);
+  content: "";
+  animation: lg-pulso 1.6s var(--via-ease-out) infinite;
+}
+
+@keyframes lg-pulso {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--sb-azul) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--sb-azul) 0%, transparent);
+  }
+}
+
+@keyframes lg-onda {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--sb-azul) 40%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--sb-azul) 0%, transparent);
+  }
+}
+
+/* ---------- as abas ---------- */
+
+.lgAbas {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  gap: var(--sb-esp-1);
+  min-width: 0;
+  margin-bottom: calc(var(--sb-esp-6) * -1 + var(--sb-esp-4));
+  padding: 4px;
+  border-radius: var(--sb-r-pilula);
+  background: var(--sb-branco);
+  box-shadow: inset 0 0 0 1px var(--sb-linha);
+  align-self: flex-start;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* o indicador que desliza até a aba escolhida (o TelaLigacoes mede a aba: --lg-ind-x e --lg-ind-w) */
+.lgAbaIndicador {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  z-index: -1;
+  width: var(--lg-ind-w, 0);
+  border-radius: var(--sb-r-pilula);
+  background: var(--sb-navy);
+  opacity: 0;
+  transform: translateX(var(--lg-ind-x, 0));
+  pointer-events: none;
+}
+
+.lgAbas[data-medido] .lgAbaIndicador {
+  opacity: 1;
+}
+
+.lgAbas[data-desliza] .lgAbaIndicador {
+  transition:
+    transform 300ms var(--via-ease-out),
+    width 300ms var(--via-ease-out);
+}
+
+.lgAba {
+  position: relative;
+  min-height: var(--sb-controle-compacto);
+  padding: 0 var(--sb-esp-4);
+  border: 0;
+  border-radius: var(--sb-r-pilula);
+  background: transparent;
+  color: var(--sb-tinta-2);
+  font: inherit;
+  font-size: var(--sb-fs-apoio);
+  font-weight: var(--sb-peso-medio);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--app-t-state),
+    color 200ms var(--via-ease-out);
+}
+
+.lgAba:hover {
+  color: var(--sb-tinta);
+}
+
+.lgAba[aria-selected="false"]:hover {
+  background: var(--sb-canvas);
+}
+
+/* sem a medida (o servidor, o primeiro desenho), a própria aba pinta o fundo */
+.lgAba[aria-selected="true"] {
+  background: var(--sb-navy);
+  color: var(--sb-tinta-inversa);
+}
+
+.lgAbas[data-medido] .lgAba[aria-selected="true"] {
+  background: transparent;
+}
+
+.lgAba:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--sb-anel);
+}
+
+/* o painel troca com a aba (key): entra com um fade e um deslocamento curto */
+.lgPainel {
+  min-width: 0;
+  outline: none;
+  animation: lg-entra 260ms var(--via-ease-out) backwards;
+}
+
+@keyframes lg-entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes lg-surge {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- o Histórico ---------- */
+
+.lgHist {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  gap: var(--sb-esp-4);
+  align-items: start;
+}
+
+.lgLista {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--sb-r-card);
+  background: var(--sb-branco);
+  box-shadow: var(--sb-sombra-card);
+}
+
+.lgListaCab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-3);
+  padding: 14px var(--sb-esp-3) var(--sb-esp-3);
+  border-bottom: 1px solid var(--sb-linha);
+}
+
+.lgFiltros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sb-esp-2);
+}
+
+.lgItens {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: var(--sb-esp-2);
+  list-style: none;
+}
+
+/* os itens entram em cascata leve (os 12 primeiros; os de baixo, juntos) */
+.lgItens > li {
+  animation: lg-entra 240ms var(--via-ease-out) backwards;
+  animation-delay: calc(min(var(--i, 0), 12) * 24ms);
+}
+
+.lgItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sb-esp-3);
+  width: 100%;
+  padding: 10px var(--sb-esp-2);
+  border: 0;
+  border-radius: var(--sb-r-item);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--app-t-state);
+}
+
+.lgItem:hover {
+  background: var(--sb-canvas);
+}
+
+.lgItem[aria-current="true"] {
+  background: var(--sb-azul-claro);
+  box-shadow: inset 3px 0 0 var(--sb-azul);
+}
+
+.lgItem[aria-current="true"]:focus-visible {
+  box-shadow:
+    inset 3px 0 0 var(--sb-azul),
+    var(--sb-anel);
+}
+
+.lgItem:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--sb-anel);
+}
+
+.lgItemTxt {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.lgItemL1 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sb-esp-2);
+  min-width: 0;
+}
+
+.lgItemNome {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lgItemHora {
+  flex: none;
+  color: var(--sb-tinta-3);
+  font-size: var(--sb-fs-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+.lgItemL2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--sb-esp-2);
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+}
+
+/* o selo da ligação: texto e ponto, nunca só cor */
+.lgSelo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: var(--sb-r-pilula);
+  background: var(--sb-canvas);
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  font-weight: var(--sb-peso-medio);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.lgSelo::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.lgSelo[data-selo="andamento"] {
+  background: var(--sb-azul-claro);
+  color: var(--sb-azul-texto);
+}
+
+/* em andamento sem o pós-chamada depois da duração máxima: neutro, como uma ligação sem dados */
+.lgSelo[data-selo="sem_resumo"] {
+  color: var(--sb-tinta-2);
+}
+
+.lgSelo[data-selo="equipe"] {
+  background: var(--sb-areia);
+  color: var(--sb-tinta);
+}
+
+.lgSelo[data-selo="nao_completada"] {
+  background: var(--sb-erro-claro);
+  color: var(--sb-erro);
+}
+
+.lgSelo[data-selo="concluida"] {
+  color: var(--sb-sucesso);
+}
+
+.lgNada {
+  margin: 0;
+  padding: var(--sb-esp-6) var(--sb-esp-4);
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+  text-align: center;
+}
+
+.lgDetalhe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-5);
+  min-width: 0;
+  padding: var(--sb-pad-card);
+  border-radius: var(--sb-r-card);
+  background: var(--sb-branco);
+  box-shadow: var(--sb-sombra-card);
+}
+
+/* a ligação aberta (key = a ligação) entra deslizando da lista */
+.lgDetalhe[data-lg-detalhe] {
+  animation: lg-detalhe 280ms var(--via-ease-out) backwards;
+}
+
+@keyframes lg-detalhe {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+
+.lgDetalheVazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sb-esp-3);
+  min-height: 240px;
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+  text-align: center;
+}
+
+.lgDetalheVazio p {
+  max-width: 18rem;
+  margin: 0;
+}
+
+.lgVazioIcone {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--sb-canvas);
+  color: var(--sb-tinta-3);
+}
+
+/* o corpo troca (key) quando a ligação termina pelo tempo real: o fim chega com um fade */
+.lgDetalheCorpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-5);
+  min-width: 0;
+  animation: lg-entra 300ms var(--via-ease-out) backwards;
+}
+
+/* ---------- a ligação viva (o palco: o momento escuro do Subido) ---------- */
+
+.lgVivo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sb-esp-4);
+  padding: var(--sb-esp-4) var(--sb-esp-5);
+  overflow: hidden;
+  border-radius: var(--sb-r-item);
+  background:
+    radial-gradient(
+      120% 140% at 100% 50%,
+      color-mix(in srgb, var(--sb-azul) 28%, transparent),
+      transparent 60%
+    ),
+    var(--sb-palco);
+  color: var(--sb-tinta-inversa);
+}
+
+.lgVivoIcone {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--sb-azul);
+  color: var(--sb-tinta-inversa);
+  animation: lg-onda 1.8s var(--via-ease-out) infinite;
+}
+
+.lgVivoTexto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.lgVivoRotulo {
+  margin: 0;
+  color: color-mix(in srgb, var(--sb-tinta-inversa) 78%, transparent);
+  font-size: var(--sb-fs-meta);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lgVivoDl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--sb-esp-5);
+  margin: 0;
+}
+
+.lgVivoDl > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lgVivoDl dt {
+  color: color-mix(in srgb, var(--sb-tinta-inversa) 72%, transparent);
+  font-size: var(--sb-fs-meta);
+}
+
+.lgVivoDl dd {
+  margin: 0;
+  font-size: var(--sb-fs-corpo);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.lgVivoTempo {
+  font-family: var(--sb-fonte-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.lgVivoEq {
+  color: var(--sb-azul);
+}
+
+/* ---------- o resumo em destaque ---------- */
+
+.lgResumoDestaque {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sb-esp-3);
+  padding: var(--sb-esp-4);
+  border-radius: var(--sb-r-item);
+  background: var(--sb-azul-nevoa);
+}
+
+.lgResumoDestaque[data-vazio] {
+  background: var(--sb-canvas);
+}
+
+/* o objetivo da ligação de saída: o que a equipe pediu, com o fio do lado (não compete com o resumo) */
+.lgObjetivoLigacao {
+  flex: none;
+  padding: 2px 0 2px var(--sb-esp-3);
+  border-left: 3px solid var(--sb-linha);
+}
+
+.lgObjetivoLigacao p {
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.lgResumoDestaque[data-vazio] .lgResumo {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+}
+
+.lgDetalheCab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sb-esp-3);
+}
+
+.lgDetalheTitulo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.lgDetalheH {
+  margin: 0;
+  font-size: var(--sb-fs-secao);
+  font-weight: 600;
+  line-height: 1.2;
+  outline: none;
+  overflow-wrap: anywhere;
+}
+
+.lgVoltar {
+  display: none;
+}
+
+.lgFatos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--sb-esp-3);
+  margin: 0;
+}
+
+.lgFato {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lgFato dt {
+  color: var(--sb-tinta-3);
+  font-size: var(--sb-fs-meta);
+}
+
+.lgFato dd {
+  margin: 0;
+  font-size: var(--sb-fs-apoio);
+  font-weight: var(--sb-peso-medio);
+  overflow-wrap: anywhere;
+}
+
+.lgBloco {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--sb-esp-2);
+  min-width: 0;
+  margin: 0;
+}
+
+.lgBlocoH {
+  margin: 0;
+  font-size: var(--sb-fs-apoio);
+  font-weight: 600;
+}
+
+.lgResumo {
+  margin: 0;
+  font-size: var(--sb-fs-corpo);
+  line-height: var(--sb-lh-corpo);
+  text-wrap: pretty;
+}
+
+/* a transcrição como conversa: o lead à esquerda (cinza), o agente à direita (azul claro), como as
+   bolhas do Chat; o nome e o tempo da fala em cima, discretos. A ordem no HTML é tempo, nome e texto
+   (o que o leitor de tela lê); a grade põe o nome antes. */
+.lgFalas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lgFala {
+  display: grid;
+  grid-template-areas:
+    "quem tempo"
+    "texto texto";
+  grid-template-columns: auto 1fr;
+  gap: 2px var(--sb-esp-2);
+  align-self: flex-start;
+  max-width: min(36rem, 86%);
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 6px;
+  background: var(--sb-canvas);
+  animation: lg-entra 240ms var(--via-ease-out) backwards;
+  animation-delay: calc(min(var(--i, 0), 10) * 18ms);
+}
+
+.lgFala[data-papel="agente"] {
+  align-self: flex-end;
+  border-radius: 18px 18px 6px 18px;
+  background: var(--sb-azul-claro);
+}
+
+.lgFalaTempo {
+  grid-area: tempo;
+  color: var(--sb-tinta-2);
+  font-family: var(--sb-fonte-mono);
+  font-size: var(--sb-fs-micro);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.6;
+}
+
+.lgFalaQuem {
+  grid-area: quem;
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.lgFala[data-papel="agente"] .lgFalaQuem {
+  color: var(--sb-azul-texto);
+}
+
+.lgFalaTexto {
+  grid-area: texto;
+  margin: 0;
+  font-size: var(--sb-fs-apoio);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- os Agentes ---------- */
+
+.lgAgentes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-4);
+}
+
+.lgAgentesCab {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sb-esp-3);
+}
+
+.lgCartoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--sb-esp-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lgCartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-4);
+  min-width: 0;
+  padding: var(--sb-pad-card);
+  border-radius: var(--sb-r-card);
+  background: var(--sb-branco);
+  box-shadow:
+    inset 0 0 0 2px transparent,
+    var(--sb-sombra-card);
+  transition:
+    box-shadow 240ms var(--via-ease-out),
+    transform 200ms var(--via-ease-out);
+  animation: lg-entra 260ms var(--via-ease-out) backwards;
+  animation-delay: calc(min(var(--i, 0), 8) * 40ms);
+}
+
+.lgCartao:hover {
+  box-shadow:
+    inset 0 0 0 2px transparent,
+    var(--sb-sombra-flutuante);
+  transform: translateY(-2px);
+}
+
+.lgCartao[data-atende] {
+  box-shadow:
+    inset 0 0 0 2px var(--sb-azul),
+    var(--sb-sombra-card);
+}
+
+.lgCartao[data-atende]:hover {
+  box-shadow:
+    inset 0 0 0 2px var(--sb-azul),
+    var(--sb-sombra-flutuante);
+}
+
+.lgCartaoCab {
+  display: flex;
+  align-items: center;
+  gap: var(--sb-esp-3);
+  min-width: 0;
+}
+
+.lgCartaoAvatar {
+  flex: none;
+}
+
+.lgCartaoTitulo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* o selo do uso (Receptiva ou Ativa) e o objetivo, numa linha */
+.lgCartaoMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--sb-esp-2);
+}
+
+.lgCartaoH {
+  margin: 0;
+  font-size: var(--sb-fs-cartao);
+  font-weight: 600;
+  line-height: 1.3;
+  outline: none;
+  overflow-wrap: anywhere;
+}
+
+.lgCartaoH:focus-visible {
+  border-radius: 6px;
+  box-shadow: var(--sb-anel);
+}
+
+.lgCartaoErro {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: var(--sb-r-mini);
+  background: var(--sb-erro-claro);
+  color: var(--sb-erro);
+  font-size: var(--sb-fs-meta);
+  line-height: 1.45;
+}
+
+.lgCartaoDl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px var(--sb-esp-3);
+  margin: 0;
+  font-size: var(--sb-fs-apoio);
+}
+
+.lgCartaoDl dt {
+  color: var(--sb-tinta-3);
+}
+
+.lgCartaoDl dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.lgCartaoPe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sb-esp-2);
+  margin-top: auto;
+  padding-top: var(--sb-esp-3);
+  border-top: 1px solid var(--sb-linha);
+}
+
+/* o selo de quem atende: chega ao cartão novo com uma mola curta */
+.lgAtende {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--sb-controle-compacto);
+  margin-right: auto;
+  padding: 0 12px 0 10px;
+  border-radius: var(--sb-r-pilula);
+  background: var(--sb-azul-claro);
+  color: var(--sb-azul-texto);
+  font-size: var(--sb-fs-apoio);
+  font-weight: 600;
+  animation: lg-selo 320ms var(--via-ease-spring) backwards;
+}
+
+@keyframes lg-selo {
+  from {
+    opacity: 0;
+    transform: scale(0.7) translateY(4px);
+  }
+}
+
+/* o vazio da aba Agentes */
+.lgVazioAgentes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sb-esp-3);
+  padding: var(--sb-esp-8) var(--sb-esp-4);
+  border-radius: var(--sb-r-card);
+  background: var(--sb-branco);
+  box-shadow: inset 0 0 0 1.5px var(--sb-linha);
+  text-align: center;
+  animation: lg-entra 260ms var(--via-ease-out) backwards;
+}
+
+.lgVazioTexto {
+  max-width: 30rem;
+  margin: 0;
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* ---------- o progresso da ativação ---------- */
+
+.lgProgresso {
+  position: relative;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--sb-r-pilula);
+  background: var(--sb-canvas);
+}
+
+.lgProgresso > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--sb-azul);
+  transform: scaleX(var(--lg-progresso, 0));
+  transform-origin: left;
+  transition: transform 600ms var(--via-ease-out);
+}
+
+.lgProgresso[data-indeterminado] > span {
+  animation: lg-corre 1.4s var(--via-ease) infinite;
+}
+
+@keyframes lg-corre {
+  from {
+    transform: translateX(-100%) scaleX(0.35);
+  }
+  to {
+    transform: translateX(100%) scaleX(0.35);
+  }
+}
+
+/* o passo que termina: o check chega com uma mola */
+.lgPasso[data-estado="ok"] svg {
+  animation: lg-selo 300ms var(--via-ease-spring) backwards;
+}
+
+.lgEmpurra {
+  margin-left: auto;
+}
+
+/* ---------- a verificação antes de ativar (spec-ligacoes, seção 21) ---------- */
+
+/* Três grupos (Nina, Meta, ElevenLabs): o cliente vê de quem é cada regra. O ícone diz o estado. */
+.lgEleg {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lgElegGrupo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lgElegGrupoH {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--sb-tinta-3);
+  font-size: var(--sb-fs-meta);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.lgElegItens {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 6px 16px;
+  border-radius: 16px;
+  background: var(--sb-canvas);
+  list-style: none;
+}
+
+.lgElegItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+}
+
+.lgElegItem > svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--sb-tinta-3);
+}
+
+.lgElegItem[data-estado="ok"] > svg {
+  color: var(--sb-sucesso);
+}
+
+.lgElegItem[data-estado="falta"] > svg,
+.lgElegItem[data-estado="falhou"] > svg {
+  color: var(--sb-atencao);
+}
+
+.lgElegTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lgElegRotulo {
+  color: var(--sb-tinta);
+  font-size: var(--sb-fs-corpo);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.lgElegItem[data-estado="nao_conferido"] .lgElegRotulo {
+  color: var(--sb-tinta-2);
+}
+
+.lgElegDetalhe {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* o limite da Meta que falta (o cliente comum): o passo a passo da verificação da empresa */
+.lgElegLimite {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--sb-areia);
+  color: var(--sb-tinta);
+  font-size: var(--sb-fs-apoio);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.lgElegLimite b {
+  font-weight: 600;
+}
+
+.lgElegLimite p,
+.lgElegLimite ol {
+  margin: 0;
+}
+
+.lgElegLimite ol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 1.4em;
+  list-style: decimal;
+}
+
+.lgElegLimite li::marker {
+  color: var(--sb-tinta-2);
+  font-weight: 600;
+}
+
+/* o grupo todo certo: uma linha que abre */
+.lgElegResumo {
+  border-radius: 16px;
+  background: var(--sb-canvas);
+}
+
+.lgElegResumo > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 16px;
+  color: var(--sb-tinta);
+  font-size: var(--sb-fs-corpo);
+  font-weight: 500;
+  list-style: none;
+  cursor: pointer;
+}
+
+.lgElegResumo > summary::-webkit-details-marker {
+  display: none;
+}
+
+.lgElegResumo > summary:focus-visible {
+  outline: 2px solid var(--sb-azul);
+  outline-offset: 2px;
+}
+
+.lgElegResumo > summary > svg:first-child {
+  color: var(--sb-sucesso);
+}
+
+.lgElegConta {
+  color: var(--sb-tinta-3);
+  font-weight: 400;
+}
+
+.lgElegSeta {
+  margin-left: auto;
+  color: var(--sb-tinta-3);
+  transition: transform 160ms var(--via-ease-out);
+}
+
+.lgElegResumo[open] .lgElegSeta {
+  transform: rotate(90deg);
+}
+
+.lgElegResumo[open] > .lgElegItens {
+  padding-top: 0;
+}
+
+.lgElegLimite a {
+  align-self: flex-start;
+  color: var(--sb-azul-texto);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.lgElegEnquanto {
+  color: var(--sb-tinta-2);
+}
+
+.lgElegConferida {
+  margin: 0;
+  color: var(--sb-tinta-3);
+  font-size: var(--sb-fs-meta);
+}
+
+/* ---------- o editor do agente (na gaveta) ---------- */
+
+.lgEditor {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.lgEditorCab {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sb-esp-3);
+  padding: var(--sb-esp-4) var(--sb-esp-5);
+  border-bottom: 1px solid var(--sb-linha);
+  background: var(--sb-branco);
+}
+
+.lgEditorH {
+  margin: 0;
+  font-size: var(--sb-fs-secao);
+  font-weight: 600;
+  outline: none;
+}
+
+.lgEditorCorpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--sb-esp-6);
+  padding: var(--sb-esp-5);
+}
+
+.lgEditorPe {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sb-esp-2);
+  padding: var(--sb-esp-4) var(--sb-esp-5);
+  border-top: 1px solid var(--sb-linha);
+  background: var(--sb-branco);
+}
+
+.lgGrupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-3);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lgGrupoH {
+  margin: 0;
+  padding: 0;
+  font-size: var(--sb-fs-apoio);
+  font-weight: 600;
+}
+
+.lgAjuda {
+  margin: 0;
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.lgOpcoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-2);
+}
+
+.lgOpcoes[data-linha] {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.lgOpcao {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sb-esp-3);
+  min-height: 44px;
+  padding: 10px var(--sb-esp-3);
+  border-radius: var(--sb-r-item);
+  box-shadow: inset 0 0 0 1px var(--sb-linha);
+  cursor: pointer;
+  transition: box-shadow var(--app-t-state);
+}
+
+.lgOpcao:has(input:checked) {
+  box-shadow: inset 0 0 0 2px var(--sb-navy);
+}
+
+.lgOpcao:has(input:focus-visible) {
+  box-shadow:
+    inset 0 0 0 2px var(--sb-navy),
+    var(--sb-anel);
+}
+
+.lgOpcao input {
+  flex: none;
+  margin: 3px 0 0;
+  accent-color: var(--sb-navy);
+}
+
+.lgOpcaoTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--sb-fs-apoio);
+}
+
+.lgOpcaoNome {
+  font-weight: 600;
+}
+
+.lgOpcaoLinha {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  line-height: 1.45;
+}
+
+/* a opção que não dá para escolher agora (o motivo fica escrito, não só a cor) */
+.lgOpcao:has(input:disabled) {
+  background: var(--sb-canvas);
+  cursor: not-allowed;
+}
+
+.lgOpcao:has(input:disabled) .lgOpcaoNome {
+  color: var(--sb-tinta-2);
+}
+
+.lgOpcaoMotivo {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  font-weight: var(--sb-peso-medio);
+  line-height: 1.45;
+}
+
+.lgSabe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sb-esp-3);
+  padding: var(--sb-esp-3);
+  border-radius: var(--sb-r-item);
+  background: var(--sb-canvas);
+  font-size: var(--sb-fs-apoio);
+}
+
+/* o +/− (o estilo do Ritmo da Configuração) */
+.lgRegs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sb-esp-4);
+}
+
+.lgReg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-2);
+  min-width: 0;
+}
+
+.lgRegRotulo {
+  margin: 0;
+  font-size: var(--sb-fs-apoio);
+  font-weight: 600;
+}
+
+.lgRegLinha {
+  display: flex;
+  align-items: center;
+  gap: var(--sb-esp-2);
+}
+
+.lgRegValor {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  min-width: 5.5rem;
+  margin: 0;
+}
+
+.lgRegNum {
+  font-family: var(--sb-fonte-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.lgRegUn {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+}
+
+.lgBtnIcone {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--sb-canvas);
+  color: var(--sb-tinta);
+  cursor: pointer;
+  transition: background-color var(--app-t-state);
+}
+
+.lgBtnIcone:hover {
+  background: var(--sb-linha);
+}
+
+.lgBtnIcone[aria-disabled="true"] {
+  color: var(--sb-tinta-3);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.lgBtnIcone:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--sb-anel);
+}
+
+/* ---------- os Ajustes ---------- */
+
+.lgAjustes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-4);
+  max-width: 56rem;
+}
+
+.lgSecao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sb-esp-4);
+  padding: var(--sb-pad-card);
+  border-radius: var(--sb-r-card);
+  background: var(--sb-branco);
+  box-shadow: var(--sb-sombra-card);
+}
+
+.lgSecaoH {
+  margin: 0;
+  font-size: var(--sb-fs-cartao);
+  font-weight: 600;
+  outline: none;
+}
+
+.lgSecaoPe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sb-esp-2);
+  padding-top: var(--sb-esp-3);
+  border-top: 1px solid var(--sb-linha);
+}
+
+.lgSecaoPe > p {
+  margin-right: auto;
+}
+
+/* ---------- o aviso curto (o toast da Configuração) ---------- */
+
+.lgToast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: var(--sb-esp-2);
+  max-width: min(32rem, calc(100vw - 32px));
+  padding: 12px 16px;
+  border-radius: var(--sb-r-item);
+  background: var(--sb-navy);
+  color: var(--sb-tinta-inversa);
+  font-size: var(--sb-fs-apoio);
+  box-shadow: var(--sb-sombra-flutuante);
+  transform: translateX(-50%);
+  animation: lg-toast 0.3s var(--via-ease-out) backwards;
+}
+
+.lgToast[data-tom="erro"] {
+  background: var(--sb-erro);
+}
+
+@keyframes lg-toast {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}
+
+/* ---------- telas menores ---------- */
+
+@media (max-width: 1099px) {
+  .lgHist {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* com uma ligação aberta, a lista sai e fica o detalhe, com o "Voltar" */
+  .lgHist[data-aberta] .lgLista {
+    display: none;
+  }
+
+  .lgHist:not([data-aberta]) .lgDetalhe {
+    display: none;
+  }
+
+  .lgVoltar {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 599px) {
+  .lgNumeros {
+    width: 100%;
+  }
+
+  .lgNumero {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .lgFala {
+    max-width: 94%;
+  }
+
+  .lgVivo {
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- movimento reduzido: nada desliza, nada pulsa; as trocas viram cortes ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .lgTela,
+  .lgToast,
+  .lgPainel,
+  .lgItens > li,
+  .lgDetalhe[data-lg-detalhe],
+  .lgDetalheCorpo,
+  .lgFala,
+  .lgCartao,
+  .lgAtende,
+  .lgVazioAgentes,
+  .lgVivoIcone,
+  .lgSituacaoIcone[data-vivo],
+  .lgNumero[data-vivo] dt::before,
+  .lgPasso[data-estado="ok"] svg,
+  .lgProgresso[data-indeterminado] > span {
+    animation: none;
+  }
+
+  .lgAbas[data-desliza] .lgAbaIndicador,
+  .lgCartao,
+  .lgProgresso > span {
+    transition: none;
+  }
+
+  .lgCartao:hover {
+    transform: none;
+  }
+}
+
+.lgTela[data-movimento="reduzido"],
+.lgTela[data-movimento="reduzido"] .lgPainel,
+.lgTela[data-movimento="reduzido"] .lgItens > li,
+.lgTela[data-movimento="reduzido"] .lgDetalhe[data-lg-detalhe],
+.lgTela[data-movimento="reduzido"] .lgDetalheCorpo,
+.lgTela[data-movimento="reduzido"] .lgFala,
+.lgTela[data-movimento="reduzido"] .lgCartao,
+.lgTela[data-movimento="reduzido"] .lgAtende,
+.lgTela[data-movimento="reduzido"] .lgVazioAgentes,
+.lgTela[data-movimento="reduzido"] .lgVivoIcone,
+.lgTela[data-movimento="reduzido"] .lgSituacaoIcone[data-vivo],
+.lgTela[data-movimento="reduzido"] .lgNumero[data-vivo] dt::before,
+.lgTela[data-movimento="reduzido"] .lgPasso[data-estado="ok"] svg,
+.lgTela[data-movimento="reduzido"] .lgProgresso[data-indeterminado] > span {
+  animation: none;
+}
+
+.lgTela[data-movimento="reduzido"] .lgAbas[data-desliza] .lgAbaIndicador,
+.lgTela[data-movimento="reduzido"] .lgCartao,
+.lgTela[data-movimento="reduzido"] .lgProgresso > span {
+  transition: none;
+}
+
+.lgTela[data-movimento="reduzido"] .lgCartao:hover {
+  transform: none;
+}

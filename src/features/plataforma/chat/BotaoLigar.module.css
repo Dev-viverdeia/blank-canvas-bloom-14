@@ -1,0 +1,284 @@
+/* O botão "Ligar" da conversa (spec-ligacao-saida, seção 6): uma pílula de 36 px com o contorno do
+   botão da ficha; o painel abre embaixo, alinhado à direita. A janela (spec-ligar-com-agente) pergunta
+   "Como ligar" (opções empilhadas, no estilo das opções do editor de agente), a lista de agentes, o
+   objetivo e, abaixo de uma linha, o painel de permissão. Rola por dentro quando não cabe. */
+.lgrRaiz {
+  position: relative;
+  flex: none;
+}
+
+.lgrBotao {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px 0 12px;
+  border: 0;
+  border-radius: var(--sb-r-pilula);
+  background: var(--sb-branco);
+  box-shadow: inset 0 0 0 1px var(--sb-linha);
+  color: var(--sb-tinta);
+  font: inherit;
+  font-size: var(--sb-fs-apoio);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--app-t-state),
+    color var(--app-t-state);
+}
+
+.lgrBotao:hover {
+  background: var(--sb-azul-nevoa);
+}
+
+.lgrBotao[data-aberto] {
+  background: var(--sb-azul-claro);
+  box-shadow: none;
+  color: var(--sb-azul-texto);
+}
+
+.lgrBotao:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--sb-anel);
+}
+
+.lgrPainel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(640px, calc(100dvh - 120px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--sb-branco);
+  box-shadow:
+    0 0 0 1px var(--sb-linha),
+    0 12px 32px rgb(15 23 42 / 0.14);
+}
+
+/* "Como ligar" e "Agente": grupos sem a borda do fieldset */
+.lgrGrupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* a legenda flutuando vira uma caixa comum: fica dentro do grupo e entra no gap */
+.lgrGrupo > legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+
+.lgrLegenda {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+  font-weight: 600;
+}
+
+.lgrOpcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lgrOpcao {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: var(--sb-r-item);
+  box-shadow: inset 0 0 0 1px var(--sb-linha);
+  cursor: pointer;
+  transition: box-shadow var(--app-t-state);
+}
+
+.lgrOpcao:has(input:checked) {
+  box-shadow: inset 0 0 0 2px var(--sb-navy);
+}
+
+.lgrOpcao:has(input:focus-visible) {
+  box-shadow:
+    inset 0 0 0 2px var(--sb-navy),
+    var(--sb-anel);
+}
+
+/* a opção que não dá para escolher: o motivo fica escrito, não só a cor */
+.lgrOpcao:has(input:disabled) {
+  background: var(--sb-canvas);
+  cursor: not-allowed;
+}
+
+.lgrOpcao:has(input:disabled) .lgrOpcaoNome {
+  color: var(--sb-tinta-2);
+}
+
+.lgrOpcao input {
+  flex: none;
+  margin: 3px 0 0;
+  accent-color: var(--sb-navy);
+}
+
+.lgrOpcaoTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: var(--sb-fs-apoio);
+  line-height: 1.4;
+}
+
+.lgrOpcaoLinha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.lgrOpcaoNome {
+  color: var(--sb-tinta);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.lgrOpcaoMotivo {
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  line-height: 1.45;
+}
+
+/* o painel de permissão (e o "Eu mesmo"), separado do que vem antes por uma linha */
+.lgrPermissao {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sb-linha);
+}
+
+.lgrCab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lgrIcone {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--sb-canvas);
+  color: var(--sb-tinta-2);
+}
+
+.lgrIcone[data-tom="ok"] {
+  background: var(--sb-azul-claro);
+  color: var(--sb-azul-texto);
+}
+
+.lgrIcone[data-tom="atencao"] {
+  background: var(--sb-areia);
+  color: var(--sb-atencao);
+}
+
+.lgrTitulo {
+  margin: 0;
+  color: var(--sb-tinta);
+  font-size: var(--sb-fs-corpo);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.lgrTexto,
+.lgrDetalhe,
+.lgrFalha {
+  margin: 0;
+  font-size: var(--sb-fs-apoio);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.lgrTexto {
+  color: var(--sb-tinta-2);
+}
+
+.lgrDetalhe {
+  color: var(--sb-tinta-3);
+}
+
+.lgrFalha {
+  color: var(--sb-erro);
+}
+
+.lgrPe {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.lgrPe:empty {
+  display: none;
+}
+
+.lgrLendo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-apoio);
+}
+
+/* Cabeçalho estreito (o celular e a coluna média): só o telefone, com 44 px no toque. */
+@container (max-width: 500px) {
+  .lgrBotaoTexto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .lgrBotao {
+    justify-content: center;
+    width: 36px;
+    padding: 0;
+  }
+
+  /* a janela ocupa a largura do cabeçalho (o cabeçalho é o container e o bloco que a posiciona):
+     alinhada ao botão, ela sairia pela esquerda da tela */
+  .lgrRaiz {
+    position: static;
+  }
+
+  .lgrPainel {
+    top: calc(100% - 2px);
+    right: 8px;
+    left: 8px;
+    width: auto;
+  }
+}
+
+@media (pointer: coarse) {
+  .lgrBotao {
+    height: 44px;
+  }
+
+  .lgrOpcao {
+    min-height: 44px;
+  }
+}

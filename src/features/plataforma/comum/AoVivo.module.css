@@ -1,0 +1,91 @@
+/* A ligação viva (L23): o equalizador, barras que sobem e descem como uma
+   voz, no Histórico e no bloco da ligação no Chat. É decoração (aria-hidden): o texto "Em andamento"
+   e o tempo correndo dizem o mesmo. Com movimento reduzido, as barras ficam paradas em alturas
+   diferentes (continua parecendo uma voz). */
+
+.avEq {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  height: 14px;
+  color: var(--sb-azul);
+}
+
+.avEq[data-tamanho="g"] {
+  gap: 3px;
+  height: 28px;
+}
+
+.avEq > i {
+  display: block;
+  width: 3px;
+  height: 100%;
+  border-radius: 2px;
+  background: currentColor;
+  transform: scaleY(0.35);
+  transform-origin: center;
+  animation: av-voz 1.1s var(--via-ease) infinite alternate;
+}
+
+.avEq[data-tamanho="g"] > i {
+  width: 4px;
+}
+
+/* cada barra no seu ritmo: a soma parece fala, não um metrônomo */
+.avEq > i:nth-child(1) {
+  animation-duration: 0.9s;
+  animation-delay: -0.2s;
+}
+.avEq > i:nth-child(2) {
+  animation-duration: 0.7s;
+  animation-delay: -0.5s;
+}
+.avEq > i:nth-child(3) {
+  animation-duration: 1.05s;
+  animation-delay: -0.1s;
+}
+.avEq > i:nth-child(4) {
+  animation-duration: 0.8s;
+  animation-delay: -0.65s;
+}
+.avEq > i:nth-child(5) {
+  animation-duration: 0.95s;
+  animation-delay: -0.35s;
+}
+
+@keyframes av-voz {
+  0% {
+    transform: scaleY(0.3);
+  }
+  45% {
+    transform: scaleY(1);
+  }
+  70% {
+    transform: scaleY(0.55);
+  }
+  100% {
+    transform: scaleY(0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avEq > i {
+    animation: none;
+  }
+  .avEq > i:nth-child(1) {
+    transform: scaleY(0.45);
+  }
+  .avEq > i:nth-child(2) {
+    transform: scaleY(0.9);
+  }
+  .avEq > i:nth-child(3) {
+    transform: scaleY(0.6);
+  }
+  .avEq > i:nth-child(4) {
+    transform: scaleY(1);
+  }
+  .avEq > i:nth-child(5) {
+    transform: scaleY(0.5);
+  }
+}

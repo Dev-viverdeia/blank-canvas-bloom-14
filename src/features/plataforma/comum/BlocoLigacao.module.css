@@ -1,0 +1,171 @@
+/* O registro da ligação na conversa (spec-ligacoes, 2.7): um bloco próprio, com contorno, e não um
+   balão de mensagem. O ícone do telefone, o título com a duração, o resumo e a transcrição que abre. */
+
+.blLigacao {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: min(18rem, 100%);
+  max-width: 100%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: var(--sb-branco);
+  box-shadow: inset 0 0 0 1px var(--sb-linha-forte);
+  color: var(--sb-tinta);
+  transition:
+    background-color var(--app-t-reveal),
+    box-shadow var(--app-t-reveal);
+}
+
+/* a ligação acontecendo: o contorno azul, o telefone emitindo uma onda e o tempo correndo */
+.blLigacao[data-vivo] {
+  background: var(--sb-azul-nevoa);
+  box-shadow: inset 0 0 0 1.5px var(--sb-azul);
+}
+
+.blLigacao[data-vivo] .blIcone {
+  background: var(--sb-azul);
+  color: var(--sb-tinta-inversa);
+  animation: bl-onda 1.8s var(--via-ease-out) infinite;
+}
+
+@keyframes bl-onda {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--sb-azul) 45%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--sb-azul) 0%, transparent);
+  }
+}
+
+.blVivo {
+  margin: 0 0 0 42px;
+  color: var(--sb-tinta-2);
+  font-size: var(--sb-fs-meta);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes bl-entra {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.blCab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.blIcone {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--sb-azul-nevoa);
+  color: var(--sb-azul-texto);
+  transition:
+    background-color var(--app-t-reveal),
+    color var(--app-t-reveal);
+}
+
+.blLigacao[data-fase="falhou"] .blIcone {
+  background: var(--sb-erro-claro);
+  color: var(--sb-erro);
+}
+
+.blTitulo {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--sb-fs-corpo);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* o resumo que chega com o fim da ligação (o tempo real) entra suave */
+.blResumo {
+  animation: bl-entra 280ms var(--via-ease-out) backwards;
+  margin: 0;
+  font-size: var(--sb-fs-leitura);
+  line-height: 1.5;
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.blTransc {
+  padding-top: 4px;
+  border-top: 1px solid var(--sb-linha);
+}
+
+.blTranscBot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--sb-controle);
+  margin-left: -6px;
+  padding: 0 10px 0 6px;
+  border: 0;
+  border-radius: var(--sb-r-pilula);
+  background: transparent;
+  font: inherit;
+  font-size: var(--sb-fs-meta);
+  font-weight: 600;
+  color: var(--sb-tinta-2);
+  cursor: pointer;
+}
+
+.blTranscBot:hover {
+  background: var(--sb-canvas);
+}
+
+.blTranscBot:focus-visible {
+  outline: none;
+  box-shadow: var(--sb-anel);
+}
+
+.blSeta {
+  transition: transform var(--app-t-touch);
+}
+
+.blTranscBot[aria-expanded="true"] .blSeta {
+  transform: rotate(180deg);
+}
+
+.blTranscTexto {
+  animation: bl-entra 220ms var(--via-ease-out) backwards;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 2px 0 4px;
+  font-size: var(--sb-fs-corpo);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.blTranscTexto p {
+  margin: 0;
+}
+
+.blQuem {
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blLigacao,
+  .blIcone,
+  .blSeta {
+    transition: none;
+  }
+
+  .blLigacao[data-vivo] .blIcone,
+  .blResumo,
+  .blTranscTexto {
+    animation: none;
+  }
+}
